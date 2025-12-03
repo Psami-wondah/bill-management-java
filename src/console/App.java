@@ -1,13 +1,18 @@
+package console;
+
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import backend.Customer;
+import backend.Tariff;
 
 public class App {
     static Scanner scanner;
 
-    public static void calculateBill() {
+    public static void calculateBill(Customer customer) {
         System.out.println();
         System.out.println("Select a tariff to calculate the bill:");
-        ArrayList<Tariff> tariffs = Tariff.OBJECTS.findAll();
+        ArrayList<Tariff> tariffs = Tariff.OBJECTS.filter(t -> t.getUserId().equals(customer.getId()));
         for (int i = 0; i < tariffs.size(); i++) {
             Tariff tariff = tariffs.get(i);
             System.out.println((i + 1) + ". " + tariff.getName() + " - " + tariff.getMeterType());
@@ -94,7 +99,7 @@ public class App {
                     for (Tariff tariff : tariffs) {
                         System.out.println(tariff.getName() + " - " + tariff.getMeterType() +
                                 " - Rate: " + tariff.getRate() +
-                                " - Daily Standing Charge: " + tariff.getDailyStandingCharge());
+                                " - Daily Standing Charge: " + tariff.getDailyStandingCharge() + tariff.getUserId());
                     }
                 }
                 showDashboard(customer);
@@ -105,7 +110,7 @@ public class App {
                 showDashboard(customer);
                 break;
             case 3:
-                calculateBill();
+                calculateBill(customer);
                 showDashboard(customer);
                 break;
             case 4:
@@ -159,6 +164,7 @@ public class App {
     }
 
     public static void intro() {
+        System.out.println("=========================================");
         System.out.println("Welcome to the Bill Management System!");
         System.out.println("Manage your customers and tariffs with ease.");
         System.out.println("=========================================");
@@ -172,16 +178,19 @@ public class App {
         int choice = scanner.nextInt();
         System.out.println();
         Customer customer = null;
-        if (choice == 1) {
-            System.out.println("Redirecting to New Customer Registration...");
-            customer = registerCustomer();
-        } else if (choice == 2) {
-            System.out.println("Redirecting to Existing Customer Login...");
-            customer = loginCustomer();
-        } else {
-            System.out.println("Invalid choice. Please restart the application.");
-            intro();
-            return;
+        switch (choice) {
+            case 1:
+                System.out.println("Redirecting to New Customer Registration...");
+                customer = registerCustomer();
+                break;
+            case 2:
+                System.out.println("Redirecting to Existing Customer Login...");
+                customer = loginCustomer();
+                break;
+            default:
+                System.out.println("Invalid choice. Please restart the application.");
+                intro();
+                return;
         }
         showDashboard(customer);
     }
