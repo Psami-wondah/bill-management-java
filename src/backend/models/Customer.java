@@ -1,10 +1,10 @@
-package backend;
+package backend.models;
 
-import java.io.Serializable;
+import backend.repositories.CustomerRepository;
 
-public class Customer implements Serializable {
+public class Customer implements BaseModel {
 
-    public static final CustomerRepository OBJECTS = new CustomerRepository();
+    public static final CustomerRepository objects = new CustomerRepository();
 
     private final String id;
     private String phoneNumber;
@@ -12,12 +12,8 @@ public class Customer implements Serializable {
     private String email;
     private String address;
 
-    protected String generateCode() {
-        return String.format("%06d", new java.util.Random().nextInt(1_000_000));
-    }
-
     public Customer(String name, String email, String phoneNumber, String address) {
-        this.id = generateCode();
+        this.id = objects.generateId();
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
@@ -61,6 +57,6 @@ public class Customer implements Serializable {
     }
 
     public void save() {
-        OBJECTS.add(this);
+        objects.add(this);
     }
 }

@@ -1,0 +1,1 @@
+1. Use JSON Instead of Object Serialization

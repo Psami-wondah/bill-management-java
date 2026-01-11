@@ -1,15 +1,12 @@
-package backend;
+package backend.repositories;
 
 import java.util.Optional;
 
-public class CustomerRepository extends FileRepository<Customer> {
-    public CustomerRepository() {
-        super("data/customers.dat");
-    }
+import backend.models.Customer;
 
-    @Override
-    public String getId(Customer customer) {
-        return customer.getId();
+public class CustomerRepository extends BaseRepository<Customer> {
+    public CustomerRepository() {
+        super("customers");
     }
 
     // You can add custom query methods:
@@ -17,5 +14,9 @@ public class CustomerRepository extends FileRepository<Customer> {
         return findAll().stream()
                 .filter(u -> u.getEmail().equalsIgnoreCase(email))
                 .findFirst();
+    }
+
+    public String generateId() {
+        return "CUS" + this.generateId(5);
     }
 }

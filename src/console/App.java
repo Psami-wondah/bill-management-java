@@ -3,8 +3,8 @@ package console;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import backend.Customer;
-import backend.Tariff;
+import backend.models.Customer;
+import backend.models.Tariff;
 
 public class App {
     static Scanner scanner;
