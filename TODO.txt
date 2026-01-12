@@ -1,1 +1,22 @@
 1. Use JSON Instead of Object Serialization
+2. If gas is selected, automatically choose single register type
+
+1. Register a new customer
+2. Customers / Search Customer
+3. Manage Tariffs
+
+
+
+
+-> 2. Customers / Search Customer
+
+# Search and select a customer
+1. Assign a Meter
+2. Assign a Tarrif
+3. Add an Account
+4. View Account Summmary
+5. Enter meter readings
+6. Record a payment
+7. Generate Invoice
+
+- New reading date must be higher than old reading date

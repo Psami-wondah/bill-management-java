@@ -1,8 +1,8 @@
 package backend.repositories;
 
-import backend.models.AccountTarrif;
+import backend.models.AccountTariff;
 
-public class AccountTarrifRepository extends BaseRepository<AccountTarrif> {
+public class AccountTarrifRepository extends BaseRepository<AccountTariff> {
 
     public AccountTarrifRepository() {
         super("account_tarrifs");

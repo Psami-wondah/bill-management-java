@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import backend.repositories.AccountTarrifRepository;
 
-public class AccountTarrif implements BaseModel {
+public class AccountTariff implements BaseModel {
 
     public static final AccountTarrifRepository objects = new AccountTarrifRepository();
 
@@ -14,7 +14,7 @@ public class AccountTarrif implements BaseModel {
     private LocalDate startDate;
     private LocalDate endDate;
 
-    public AccountTarrif(String accountId, String tariffId, LocalDate startDate, LocalDate endDate) {
+    public AccountTariff(String accountId, String tariffId, LocalDate startDate, LocalDate endDate) {
         this.id = objects.generateId();
         this.accountId = accountId;
         this.tariffId = tariffId;

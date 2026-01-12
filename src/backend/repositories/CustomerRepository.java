@@ -1,5 +1,6 @@
 package backend.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import backend.models.Customer;
@@ -18,5 +19,10 @@ public class CustomerRepository extends BaseRepository<Customer> {
 
     public String generateId() {
         return "CUS" + this.generateId(5);
+    }
+
+    public List<Customer> search(String query) {
+        return filter(c -> c.getName().toLowerCase().contains(query.toLowerCase())
+                || c.getId().equalsIgnoreCase(query));
     }
 }

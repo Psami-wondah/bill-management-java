@@ -1,6 +1,9 @@
 package backend.models;
 
+import java.time.LocalDate;
+
 import backend.enums.AccountStatus;
+import backend.enums.PaymentMethod;
 import backend.repositories.AccountRepository;
 
 public class Account implements BaseModel {
@@ -9,15 +12,15 @@ public class Account implements BaseModel {
 
     private final String id;
     private String customerId;
-    private String paymentMethod;
-    private String createdAt;
+    private PaymentMethod paymentMethod;
+    private LocalDate createdAt;
     private AccountStatus status;
 
-    public Account(String customerId, String paymentMethod, String createdAt) {
+    public Account(String customerId, PaymentMethod paymentMethod) {
         this.id = objects.generateId();
         this.customerId = customerId;
         this.paymentMethod = paymentMethod;
-        this.createdAt = createdAt;
+        this.createdAt = LocalDate.now();
         this.status = AccountStatus.ACTIVE;
     }
 
@@ -29,19 +32,19 @@ public class Account implements BaseModel {
         return customerId;
     }
 
-    public String getPaymentMethod() {
+    public PaymentMethod getPaymentMethod() {
         return paymentMethod;
     }
 
-    public void setPaymentMethod(String paymentMethod) {
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
 
-    public String getCreatedAt() {
+    public LocalDate getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
     }
 
