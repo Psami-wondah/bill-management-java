@@ -1,51 +1,80 @@
 package backend.repositories;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import java.io.*;
 import java.util.*;
 
 import backend.models.BaseModel;
+import backend.models.Database;
 
 public abstract class BaseRepository<T extends BaseModel> {
-    private final String key;
-    private final File dbFile = new File("data/db.dat");
+    private final File dbFile = new File("data/db.json");
 
-    protected BaseRepository(String key) {
-        this.key = key;
-    }
+    // Each concrete repo will say which list in Database it uses
+    protected abstract List<T> getCollection(Database db);
+
+    protected abstract void setCollection(Database db, List<T> items);
 
     protected String generateUUID() {
         return UUID.randomUUID().toString();
     }
 
-    @SuppressWarnings("unchecked")
-    private Map<String, ArrayList<?>> readDB() {
-        if (!dbFile.exists()) {
-            return new HashMap<>();
-        }
+    public Database loadFromJson() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        if (dbFile.exists()) {
+            try {
+                return mapper.readValue(dbFile, Database.class);
 
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(dbFile))) {
-            // System.out.println("Reading DB from file " + dbFile.getName());
-            return (Map<String, ArrayList<?>>) in.readObject();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return new Database();
+    }
+
+    private void saveToJson(Database data) {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
+        try {
+            writer.writeValue(dbFile, data);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Database readDB() {
+        if (!dbFile.exists()) {
+            return new Database();
+        }
+        try {
+            return loadFromJson();
         } catch (Exception e) {
             System.out.println("Error reading DB from file " + dbFile.getName() + ": " + e.getMessage());
             throw new RuntimeException(e);
         }
     }
 
-    @SuppressWarnings("unchecked")
     private ArrayList<T> readAll() {
-        Map<String, ArrayList<?>> db = readDB();
-        return (ArrayList<T>) db.getOrDefault(key, new ArrayList<T>());
+        Database db = readDB();
+        List<T> list = getCollection(db);
+        if (list == null) {
+            return new ArrayList<>();
+        }
+        return new ArrayList<>(list);
     }
 
     private void writeAll(ArrayList<T> items) {
-        Map<String, ArrayList<?>> db = readDB();
-        db.put(key, items);
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(dbFile))) {
-            out.writeObject(db);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        Database db = readDB();
+        setCollection(db, new ArrayList<>(items));
+        saveToJson(db);
     }
 
     public void add(T item) {

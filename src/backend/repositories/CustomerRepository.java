@@ -4,10 +4,17 @@ import java.util.List;
 import java.util.Optional;
 
 import backend.models.Customer;
+import backend.models.Database;
 
 public class CustomerRepository extends BaseRepository<Customer> {
-    public CustomerRepository() {
-        super("customers");
+    @Override
+    protected void setCollection(Database db, List<Customer> items) {
+        db.customers = items;
+    }
+
+    @Override
+    protected List<Customer> getCollection(Database db) {
+        return db.customers;
     }
 
     // You can add custom query methods:

@@ -7,4 +7,5 @@ public interface BaseModel extends Serializable {
     public String getId();
 
     public void save();
+
 }

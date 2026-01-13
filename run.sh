@@ -1,3 +1,3 @@
 #!/bin/bash
 
-java -cp bin console.App
+java -cp "bin:lib/*" console.App 

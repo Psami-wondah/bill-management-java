@@ -3,6 +3,9 @@ package backend.models;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import backend.enums.FuelType;
 import backend.enums.RateType;
 import backend.repositories.TariffRepository;
@@ -26,6 +29,34 @@ public class Tariff implements BaseModel {
     private BigDecimal vatRate;
     private LocalDate effectiveFrom;
     private LocalDate effectiveTo;
+
+    // Constructor for JSON deserialization
+    @JsonCreator
+    public Tariff(
+            @JsonProperty("id") String id,
+            @JsonProperty("name") String name,
+            @JsonProperty("fuelType") FuelType fuelType,
+            @JsonProperty("rateType") RateType rateType,
+            @JsonProperty("singleRate") BigDecimal singleRate,
+            @JsonProperty("dayRate") BigDecimal dayRate,
+            @JsonProperty("nightRate") BigDecimal nightRate,
+            @JsonProperty("dailyStandingCharge") BigDecimal dailyStandingCharge,
+            @JsonProperty("vatRate") BigDecimal vatRate,
+            @JsonProperty("effectiveFrom") LocalDate effectiveFrom,
+            @JsonProperty("effectiveTo") LocalDate effectiveTo) {
+
+        this.id = id;
+        this.name = name;
+        this.fuelType = fuelType;
+        this.rateType = rateType;
+        this.singleRate = singleRate;
+        this.dayRate = dayRate;
+        this.nightRate = nightRate;
+        this.dailyStandingCharge = dailyStandingCharge;
+        this.vatRate = vatRate;
+        this.effectiveFrom = effectiveFrom;
+        this.effectiveTo = effectiveTo;
+    }
 
     public Tariff(String name, FuelType fuelType, RateType rateType, BigDecimal singleRate,
             BigDecimal dailyStandingCharge,
@@ -137,6 +168,18 @@ public class Tariff implements BaseModel {
 
     public void setEffectiveTo(LocalDate effectiveTo) {
         this.effectiveTo = effectiveTo;
+    }
+
+    public BigDecimal calculateUsageCost(BigDecimal usage) {
+        return singleRate.multiply(usage);
+    }
+
+    public BigDecimal calculateDayUsageCost(BigDecimal dayUsage) {
+        return dayRate.multiply(dayUsage);
+    }
+
+    public BigDecimal calculateNightUsageCost(BigDecimal nightUsage) {
+        return nightRate.multiply(nightUsage);
     }
 
     public void save() {

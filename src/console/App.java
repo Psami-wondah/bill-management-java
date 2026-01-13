@@ -1,9 +1,12 @@
 package console;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import backend.enums.FuelType;
@@ -11,9 +14,12 @@ import backend.enums.PaymentMethod;
 import backend.enums.RateType;
 import backend.enums.ReadingType;
 import backend.enums.RegisterType;
+import backend.enums.UsageKeys;
 import backend.models.Account;
 import backend.models.AccountTariff;
 import backend.models.Customer;
+import backend.models.Invoice;
+import backend.models.InvoiceItem;
 import backend.models.Meter;
 import backend.models.MeterReading;
 import backend.models.Tariff;
@@ -147,9 +153,15 @@ public class App {
         Meter newMeter = new Meter(account.getId(), fuelType, Common.chooseRegisterType(fuelType), installationDate);
 
         newMeter.save();
+        MeterReading initialReading;
+        if (newMeter.getRegisterType() == RegisterType.SINGLE_REGISTER) {
+            initialReading = new MeterReading(newMeter.getId(), installationDate, BigDecimal.ZERO,
+                    ReadingType.INITIAL);
+        } else {
+            initialReading = new MeterReading(newMeter.getId(), installationDate, BigDecimal.ZERO, BigDecimal.ZERO,
+                    ReadingType.INITIAL);
+        }
 
-        MeterReading initialReading = new MeterReading(newMeter.getId(), installationDate, BigDecimal.ZERO,
-                ReadingType.INITIAL);
         initialReading.save();
         assignTariffToCustomer(customer, newMeter);
         System.out.println("Meter assigned successfully with ID: " + newMeter.getId());
@@ -215,6 +227,113 @@ public class App {
                 return selectedCustomer;
             }
         }
+
+    }
+
+    public static void generateInvoice(Account account) {
+        scanner = new Scanner(System.in);
+        System.out.println("Generating invoice for Account ID: " + account.getId());
+        // Invoice generation logic goes here
+        System.out.print("Enter billing period start date (YYYY-MM-DD): ");
+        String startDateInput = scanner.nextLine();
+        LocalDate startDate = LocalDate.parse(startDateInput);
+
+        System.out.print("Enter billing period end date (YYYY-MM-DD): ");
+        String endDateInput = scanner.nextLine();
+        LocalDate endDate = LocalDate.parse(endDateInput);
+
+        AccountTariff accountTariff = AccountTariff.objects
+                .filter(at -> at.getAccountId().equals(account.getId())
+                        && (at.getStartDate().isBefore(startDate) || at.getStartDate().isEqual(startDate))
+                        && (at.getEndDate() == null || at.getEndDate().isAfter(startDate)))
+                .stream()
+                .findFirst()
+                .orElse(null);
+        if (accountTariff == null) {
+            System.out.println("No active tariff found for this account during the specified period.");
+            generateInvoice(account);
+            return;
+        }
+        Tariff tariff = Tariff.objects.findById(accountTariff.getTariffId()).orElse(null);
+        if (tariff == null) {
+            System.out.println("Tariff details not found. Cannot generate invoice.");
+            generateInvoice(account);
+            return;
+        }
+
+        Meter meter = Meter.objects
+                .filter(m -> m.getAccountId().equals(account.getId()))
+                .stream()
+                .findFirst()
+                .orElse(null);
+
+        if (meter == null) {
+            System.out.println("No meter found for this account. Cannot generate invoice.");
+            generateInvoice(account);
+            return;
+        }
+
+        if (!MeterReading.objects.checkValidUsagePeriod(meter.getId(), startDate, endDate)) {
+            System.out.println("Billing period is not fully covered by meter readings");
+            generateInvoice(account);
+            return;
+        }
+
+        Map<UsageKeys, BigDecimal> usage = MeterReading.objects
+                .getUsageForPeriodByMeter(meter, startDate, endDate);
+
+        if (usage == null) {
+            System.out.println("Error calculating usage for the specified period.");
+            generateInvoice(account);
+            return;
+        }
+
+        List<InvoiceItem> invoiceItems = new ArrayList<>();
+
+        long billingDays = ChronoUnit.DAYS.between(startDate, endDate);
+
+        invoiceItems
+                .add(new InvoiceItem("Standing Charge", BigDecimal.valueOf(billingDays),
+                        tariff.getDailyStandingCharge()));
+
+        if (tariff.getRateType() == RateType.SINGLE_RATE) {
+            BigDecimal usageAmount = usage.get(UsageKeys.SINGLE);
+            BigDecimal cost = tariff.calculateUsageCost(usageAmount);
+            invoiceItems.add(new InvoiceItem("Usage Charge", BigDecimal.valueOf(billingDays),
+                    cost.divide(BigDecimal.valueOf(billingDays), 2, RoundingMode.HALF_UP),
+                    cost));
+        } else {
+            BigDecimal dayUsage = usage.get(UsageKeys.DAY);
+            BigDecimal nightUsage = usage.get(UsageKeys.NIGHT);
+            BigDecimal dayCost = tariff.calculateDayUsageCost(dayUsage);
+            BigDecimal nightCost = tariff.calculateNightUsageCost(nightUsage);
+            invoiceItems.add(new InvoiceItem("Day Usage Charge", BigDecimal.valueOf(billingDays),
+                    dayCost.divide(BigDecimal.valueOf(billingDays), 2, RoundingMode.HALF_UP),
+                    dayCost));
+            invoiceItems.add(new InvoiceItem("Night Usage Charge", BigDecimal.valueOf(billingDays),
+                    nightCost.divide(BigDecimal.valueOf(billingDays), 2, RoundingMode.HALF_UP),
+                    nightCost));
+        }
+
+        BigDecimal subTotal = invoiceItems.stream()
+                .map(InvoiceItem::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal vat = subTotal.multiply(tariff.getVatRate()).setScale(2, RoundingMode.HALF_UP);
+
+        BigDecimal total = subTotal.add(vat).setScale(2, RoundingMode.HALF_UP);
+
+        Invoice newInvoice = new Invoice(account.getId(), accountTariff.getId(), subTotal, vat, total,
+                backend.enums.InvoiceStatus.ISSUED, startDate, endDate, invoiceItems);
+
+        newInvoice.save();
+
+        System.out.println("Invoice generated successfully with ID: " + newInvoice.getId());
+
+        System.out.println("Invoice Summary:");
+        System.out.println("Subtotal: " + subTotal.setScale(2, RoundingMode.HALF_UP));
+        System.out.println("VAT: " + vat);
+        System.out.println("Total: " + total);
 
     }
 
@@ -305,7 +424,10 @@ public class App {
                 break;
             case 6:
                 // Generate Invoice logic here
-                System.out.println("Feature not implemented yet.");
+                Account accForInvoice = selectAccountForCustomer(customer);
+                if (accForInvoice != null) {
+                    generateInvoice(accForInvoice);
+                }
                 break;
             case 7:
                 manageCustomers();

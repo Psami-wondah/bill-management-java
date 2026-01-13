@@ -2,6 +2,9 @@ package backend.models;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import backend.enums.AccountStatus;
 import backend.enums.PaymentMethod;
 import backend.repositories.AccountRepository;
@@ -15,6 +18,19 @@ public class Account implements BaseModel {
     private PaymentMethod paymentMethod;
     private LocalDate createdAt;
     private AccountStatus status;
+
+    @JsonCreator
+    public Account(@JsonProperty("id") String id,
+            @JsonProperty("customerId") String customerId,
+            @JsonProperty("paymentMethod") PaymentMethod paymentMethod,
+            @JsonProperty("createdAt") LocalDate createdAt,
+            @JsonProperty("status") AccountStatus status) {
+        this.id = id;
+        this.customerId = customerId;
+        this.paymentMethod = paymentMethod;
+        this.createdAt = createdAt;
+        this.status = status;
+    }
 
     public Account(String customerId, PaymentMethod paymentMethod) {
         this.id = objects.generateId();

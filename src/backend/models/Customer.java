@@ -1,5 +1,8 @@
 package backend.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import backend.repositories.CustomerRepository;
 
 public class Customer implements BaseModel {
@@ -11,6 +14,17 @@ public class Customer implements BaseModel {
     private String name;
     private String email;
     private String address;
+
+    @JsonCreator
+    public Customer(@JsonProperty("id") String id, @JsonProperty("name") String name,
+            @JsonProperty("email") String email, @JsonProperty("phoneNumber") String phoneNumber,
+            @JsonProperty("address") String address) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+    }
 
     public Customer(String name, String email, String phoneNumber, String address) {
         this.id = objects.generateId();

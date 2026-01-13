@@ -1,7 +1,11 @@
 package backend.models;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import backend.enums.InvoiceStatus;
 import backend.repositories.InvoiceRepository;
@@ -17,12 +21,36 @@ public class Invoice implements BaseModel {
     private BigDecimal vat;
     private BigDecimal total;
     private InvoiceStatus status;
-    private String periodStart;
-    private String periodEnd;
+    private LocalDate periodStart;
+    private LocalDate periodEnd;
     private List<InvoiceItem> items;
 
+    @JsonCreator
+    public Invoice(@JsonProperty("id") String id,
+            @JsonProperty("accountId") String accountId,
+            @JsonProperty("accountTariffId") String accountTariffId,
+            @JsonProperty("subTotal") BigDecimal subTotal,
+            @JsonProperty("vat") BigDecimal vat,
+            @JsonProperty("total") BigDecimal total,
+            @JsonProperty("status") InvoiceStatus status,
+            @JsonProperty("periodStart") LocalDate periodStart,
+            @JsonProperty("periodEnd") LocalDate periodEnd,
+            @JsonProperty("items") List<InvoiceItem> items) {
+        this.id = id;
+        this.accountId = accountId;
+        this.accountTariffId = accountTariffId;
+        this.subTotal = subTotal;
+        this.vat = vat;
+        this.total = total;
+        this.status = status;
+        this.periodStart = periodStart;
+        this.periodEnd = periodEnd;
+        this.items = items;
+    }
+
     public Invoice(String accountId, String accountTariffId, BigDecimal subTotal, BigDecimal vat,
-            BigDecimal total, InvoiceStatus status, String periodStart, String periodEnd, List<InvoiceItem> items) {
+            BigDecimal total, InvoiceStatus status, LocalDate periodStart, LocalDate periodEnd,
+            List<InvoiceItem> items) {
         this.id = objects.generateId();
         this.accountId = accountId;
         this.accountTariffId = accountTariffId;
@@ -67,11 +95,11 @@ public class Invoice implements BaseModel {
         this.status = status;
     }
 
-    public String getPeriodStart() {
+    public LocalDate getPeriodStart() {
         return periodStart;
     }
 
-    public String getPeriodEnd() {
+    public LocalDate getPeriodEnd() {
         return periodEnd;
     }
 
