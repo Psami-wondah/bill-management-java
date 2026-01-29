@@ -1,12 +1,10 @@
 package fx.manageInvoices;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
 
 import backend.enums.InvoiceStatus;
 import backend.models.Account;
@@ -15,15 +13,21 @@ import backend.models.Invoice;
 import fx.Utils;
 import fx.customerPage.CustomerPageController;
 import fx.generateInvoice.GenerateInvoiceController;
+import fx.viewInvoice.ViewInvoiceController;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class ManageInvoicesController {
     private Customer selectedCustomer;
@@ -123,15 +127,24 @@ public class ManageInvoicesController {
     }
 
     private void openInvoice(Invoice invoice) {
-        List<String> infoMessages = new ArrayList<>();
-        infoMessages.add("Invoice ID: " + invoice.getId());
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../viewInvoice/viewInvoice.fxml"));
+        Parent root;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-        infoMessages.add("Invoice Summary:");
-        infoMessages.add("Days: " + ChronoUnit.DAYS.between(invoice.getPeriodStart(), invoice.getPeriodEnd()));
-        infoMessages.add("Subtotal: £" + invoice.getSubTotal().setScale(2, RoundingMode.HALF_UP));
-        infoMessages.add("VAT: £" + invoice.getVat().setScale(2, RoundingMode.HALF_UP));
-        infoMessages.add("Total: £" + invoice.getTotal().setScale(2, RoundingMode.HALF_UP));
-        Utils.showInfo("Invoice Summary", infoMessages);
+        ViewInvoiceController controller = loader.getController();
+        controller.setInvoice(invoice);
+        controller.setSelectedCustomer(selectedCustomer);
+
+        Stage dialog = new Stage();
+        dialog.setTitle("View Invoice");
+        dialog.initOwner(label.getScene().getWindow());
+        dialog.initModality(Modality.WINDOW_MODAL);
+        dialog.setScene(new Scene(root));
+        dialog.showAndWait();
     }
 
     private void setupFormatting() {

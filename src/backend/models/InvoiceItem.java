@@ -2,6 +2,7 @@ package backend.models;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -45,6 +46,11 @@ public class InvoiceItem implements Serializable {
 
     public BigDecimal getUnitPrice() {
         return unitPrice;
+    }
+
+    public String toDisplay() {
+        return description + " | Qty: " + quantity + " | Unit Price: " + unitPrice + " | Amount: "
+                + amount.setScale(2, RoundingMode.HALF_UP);
     }
 
 }
