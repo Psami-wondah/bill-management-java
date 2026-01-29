@@ -137,7 +137,7 @@ public class App {
         }
         Tariff tariff = chooseTariff(meter);
 
-        AccountTariff newAccountTariff = new AccountTariff(account.getId(), tariff.getId(),
+        AccountTariff newAccountTariff = new AccountTariff(account.getId(), tariff.getId(), meter.getId(),
                 meter.getInstallationDate(), null);
 
         newAccountTariff.save();
@@ -242,8 +242,14 @@ public class App {
         String endDateInput = scanner.nextLine();
         LocalDate endDate = LocalDate.parse(endDateInput);
 
+        Meter meter = Meter.objects
+                .filter(m -> m.getAccountId().equals(account.getId()))
+                .stream()
+                .findFirst()
+                .orElse(null);
+
         AccountTariff accountTariff = AccountTariff.objects
-                .filter(at -> at.getAccountId().equals(account.getId())
+                .filter(at -> at.getAccountId().equals(meter.getAccountId())
                         && (at.getStartDate().isBefore(startDate) || at.getStartDate().isEqual(startDate))
                         && (at.getEndDate() == null || at.getEndDate().isAfter(startDate)))
                 .stream()
@@ -260,12 +266,6 @@ public class App {
             generateInvoice(account);
             return;
         }
-
-        Meter meter = Meter.objects
-                .filter(m -> m.getAccountId().equals(account.getId()))
-                .stream()
-                .findFirst()
-                .orElse(null);
 
         if (meter == null) {
             System.out.println("No meter found for this account. Cannot generate invoice.");
@@ -565,7 +565,7 @@ public class App {
         BigDecimal dailyStandingCharge = scanner.nextBigDecimal();
         System.out.print("VAT Rate (as percentage, e.g., enter 20 for 20%): ");
         BigDecimal vatRateInput = scanner.nextBigDecimal();
-        BigDecimal vatRate = vatRateInput.divide(BigDecimal.valueOf(100));
+        BigDecimal vatRate = vatRateInput.divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
         System.out.print("Effective From (YYYY-MM-DD): ");
         String effectiveFromInput = scanner.next();
         System.out.print("Effective To (YYYY-MM-DD): ");

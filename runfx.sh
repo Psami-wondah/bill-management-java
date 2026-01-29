@@ -1,3 +1,3 @@
 #!/bin/bash
 
-java -cp bin --module-path lib --add-modules javafx.controls,javafx.fxml fx.Main
+java -cp "bin:lib/*" --module-path lib --add-modules javafx.controls,javafx.fxml fx.Main

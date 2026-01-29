@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Region?>
+
+
+<!-- Centered card -->
+<VBox fx:id="menu" spacing="16" styleClass="card"
+    fx:controller="fx.dashboard.DashboardController" stylesheets="@/fx/global.css"
+    prefWidth="350.0"
+    xmlns="http://javafx.com/javafx/25"
+    xmlns:fx="http://javafx.com/fxml/1"
+    alignment="CENTER"
+    >
+
+    <padding>
+        <Insets top="50" right="24" bottom="20" left="24" />
+    </padding>
+
+    <children>
+        <!-- Title -->
+        <Label fx:id="label" text="Dashboard" style="-fx-font-size: 30px; -fx-font-weight: bold;" />
+
+        <!-- Subtitle -->
+        <Label text="Quick actions" style="-fx-font-size: 12px; -fx-text-fill: #6E6E73;" />
+
+        <!-- Small spacing -->
+        <Region prefHeight="10" />
+
+        <!-- Buttons -->
+        <Button fx:id="registerCustomerButton" text="Register a new customer" styleClass="card-btn" />
+
+        <Button fx:id="manageCustomersButton" text="Manage customers" styleClass="card-btn" />
+
+        <Button fx:id="manageTariffsButton" text="Manage tariffs" styleClass="card-btn" />
+
+        <!-- Extra spacing before exit -->
+        <Region prefHeight="6" />
+
+        <Button fx:id="exitButton"  text="Exit" styleClass="card-btn-danger" />
+    </children>
+</VBox>

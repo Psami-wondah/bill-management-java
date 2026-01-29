@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TextField?>
+
+<VBox xmlns="http://javafx.com/javafx/25"
+      xmlns:fx="http://javafx.com/fxml/1"
+      stylesheets="@/fx/global.css"
+      fx:controller="fx.manageCustomers.ManageCustomersController"
+      spacing="18"
+      prefWidth="900.0"
+      style="-fx-background-color: white;
+             -fx-background-radius: 16;
+             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.16), 18, 0.2, 0, 4);">
+
+    <padding>
+        <Insets top="24" right="24" bottom="24" left="24"/>
+    </padding>
+
+    <children>
+
+        <!-- Header -->
+        <HBox spacing="8" alignment="CENTER_LEFT">
+            <children>
+                <Region prefWidth="4" maxWidth="4" prefHeight="26"
+                        style="-fx-background-color: #4A90E2; -fx-background-radius: 999;"/>
+                <VBox spacing="4">
+                    <children>
+                        <Label text="Manage Customers"
+                               style="-fx-font-size: 20px;
+                                      -fx-font-weight: bold;
+                                      -fx-text-fill: #1C1C1E;"/>
+                        <Label text="Manage customers and their details."
+                               style="-fx-font-size: 11px;
+                                      -fx-text-fill: #6E6E73;"/>
+                    </children>
+                </VBox>
+                          <Region HBox.hgrow="ALWAYS"/>
+
+                <Button text="Back"
+                        fx:id="backButton"
+                        onAction="#onBack"
+                        styleClass="back-btn"
+                        />
+            </children>
+        </HBox>
+
+        <Separator/>
+
+        <!-- Toolbar -->
+        <HBox spacing="8" alignment="CENTER_LEFT">
+            <children>
+                <Label text="Existing customers"
+                       style="-fx-font-size: 13px;
+                              -fx-font-weight: bold;
+                              -fx-text-fill: #1C1C1E;"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Button text="Add new customer"
+                        fx:id="addCustomerButton"
+                        onAction="#onAddCustomer"
+                        style="-fx-background-color: #4A90E2;
+                               -fx-text-fill: white;
+                               -fx-font-size: 12px;
+                               -fx-font-weight: bold;
+                               -fx-background-radius: 999;
+                               -fx-padding: 6 14 6 14;
+                               -fx-cursor: hand;"/>
+            </children>
+        </HBox>
+<!-- Search bar -->
+                <HBox spacing="8" alignment="CENTER_LEFT">
+            <children>
+                <TextField fx:id="searchCustomerField"
+                                           promptText="Search Customers by Name, Email or Phone"
+                                             prefWidth="400.0"
+                                           style="-fx-background-radius: 6;
+                                                  -fx-border-radius: 6;
+                                                  -fx-border-color: #E1E3E6;
+                                                  -fx-padding: 6 8 6 8;"/>
+
+            </children>
+        </HBox>
+
+        
+
+        <!-- Table -->
+        <TableView fx:id="customerTable"
+                   prefHeight="400.0"
+
+                   style="-fx-background-insets: 0;">
+
+            <columns>
+                  <TableColumn fx:id="idColumn"
+                             text="ID"
+                             prefWidth="180.0"/>
+
+                <TableColumn fx:id="nameColumn"
+                             text="Name"
+                             prefWidth="180.0"/>
+
+                <TableColumn fx:id="phoneColumn"
+                             text="Phone"
+                             prefWidth="180.0"/>
+
+                <TableColumn fx:id="emailColumn"
+                             text="Email"
+                             prefWidth="180.0"/>
+
+                <TableColumn fx:id="addressColumn"
+                             text="Address"
+                             prefWidth="180.0"/>
+
+            </columns>
+        </TableView>
+
+    </children>
+</VBox>

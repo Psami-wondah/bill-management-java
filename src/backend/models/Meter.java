@@ -64,4 +64,8 @@ public class Meter implements BaseModel {
         objects.add(this);
     }
 
+    public String toDisplay() {
+        return id + " - " + fuelType + " - " + registerType;
+    }
+
 }

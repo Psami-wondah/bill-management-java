@@ -20,4 +20,8 @@ public class InvoiceRepository extends BaseRepository<Invoice> {
         return "INV" + this.generateId(7);
     }
 
+    public List<Invoice> findByAccountId(String accountId) {
+        return filter(i -> i.getAccountId().equals(accountId));
+    }
+
 }

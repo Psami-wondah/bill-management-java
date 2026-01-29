@@ -1,6 +1,7 @@
 package backend.models;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -170,20 +171,43 @@ public class Tariff implements BaseModel {
         this.effectiveTo = effectiveTo;
     }
 
+    private BigDecimal calculateCost(BigDecimal usage, BigDecimal rate) {
+        System.out.println("Calculating cost for usage: " + usage + " at rate: " + rate);
+        if (this.fuelType == FuelType.GAS) {
+            BigDecimal usageInM3 = usage.multiply(FT3_TO_M3);
+            BigDecimal usageInKwh = usageInM3
+                    .multiply(GAS_CORRECTION_FACTOR)
+                    .multiply(GAS_CALORIFIC_VALUE)
+                    .divide(new BigDecimal("3.6"), 10, RoundingMode.HALF_UP);
+
+            System.out.println("Usage in ft3: " + usage);
+            System.out.println("Usage in m3: " + usageInM3);
+            System.out.println("Usage in kWh: " + usageInKwh);
+            return usageInKwh.multiply(rate);
+        } else {
+            return usage.multiply(rate);
+        }
+
+    }
+
     public BigDecimal calculateUsageCost(BigDecimal usage) {
-        return singleRate.multiply(usage);
+        return calculateCost(usage, singleRate);
     }
 
     public BigDecimal calculateDayUsageCost(BigDecimal dayUsage) {
-        return dayRate.multiply(dayUsage);
+        return calculateCost(dayUsage, dayRate);
     }
 
     public BigDecimal calculateNightUsageCost(BigDecimal nightUsage) {
-        return nightRate.multiply(nightUsage);
+        return calculateCost(nightUsage, nightRate);
     }
 
     public void save() {
         objects.add(this);
+    }
+
+    public String toDisplay() {
+        return id + " " + name + " (" + fuelType + ", " + rateType + ")";
     }
 
 }

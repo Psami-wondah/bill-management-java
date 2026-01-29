@@ -30,6 +30,7 @@ public class CustomerRepository extends BaseRepository<Customer> {
 
     public List<Customer> search(String query) {
         return filter(c -> c.getName().toLowerCase().contains(query.toLowerCase())
-                || c.getId().equalsIgnoreCase(query));
+                || c.getEmail().toLowerCase().contains(query.toLowerCase())
+                || c.getPhoneNumber().toLowerCase().contains(query.toLowerCase()));
     }
 }

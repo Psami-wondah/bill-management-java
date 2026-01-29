@@ -10,18 +10,18 @@
 <?import javafx.scene.layout.VBox?>
 
 <StackPane alignment="CENTER"
-           maxHeight="-Infinity" maxWidth="-Infinity"
-           minHeight="-Infinity" minWidth="-Infinity"
            prefHeight="400.0" prefWidth="600.0"
+           maxWidth="600"
            xmlns="http://javafx.com/javafx/25"
            xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="fx.Controller"
-           style="-fx-background-color: linear-gradient(to bottom, #1a237e, #0d47a1);">
+           fx:controller="fx.home.HomeController"
+           style="-fx-background-color: #ffffff;">
 
     <children>
         <!-- Centered card -->
         <VBox spacing="16" alignment="CENTER"
-              maxWidth="340"
+              maxWidth="600"
+              
               style="-fx-background-color: white;
                      -fx-background-radius: 16;
                      -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 18, 0.2, 0, 4);">

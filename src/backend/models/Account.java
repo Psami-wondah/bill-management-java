@@ -75,4 +75,8 @@ public class Account implements BaseModel {
     public void save() {
         objects.add(this);
     }
+
+    public String toDisplay() {
+        return id + " - " + paymentMethod.toString() + " - " + status.toString();
+    }
 }

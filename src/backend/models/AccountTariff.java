@@ -14,6 +14,7 @@ public class AccountTariff implements BaseModel {
     private final String id;
     private String accountId;
     private String tariffId;
+    private String meterId;
     private LocalDate startDate;
     private LocalDate endDate;
 
@@ -21,19 +22,22 @@ public class AccountTariff implements BaseModel {
     public AccountTariff(@JsonProperty("id") String id,
             @JsonProperty("accountId") String accountId,
             @JsonProperty("tariffId") String tariffId,
+            @JsonProperty("meterId") String meterId,
             @JsonProperty("startDate") LocalDate startDate,
             @JsonProperty("endDate") LocalDate endDate) {
         this.id = id;
         this.accountId = accountId;
         this.tariffId = tariffId;
+        this.meterId = meterId;
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
-    public AccountTariff(String accountId, String tariffId, LocalDate startDate, LocalDate endDate) {
+    public AccountTariff(String accountId, String tariffId, String meterId, LocalDate startDate, LocalDate endDate) {
         this.id = objects.generateId();
         this.accountId = accountId;
         this.tariffId = tariffId;
+        this.meterId = meterId;
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -48,6 +52,10 @@ public class AccountTariff implements BaseModel {
 
     public String getTariffId() {
         return tariffId;
+    }
+
+    public String getMeterId() {
+        return meterId;
     }
 
     public LocalDate getStartDate() {

@@ -1,0 +1,64 @@
+/* Card container */
+.card {
+  -fx-background-color: white;
+  -fx-background-radius: 16;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.18), 18, 0.2, 0, 4);
+}
+
+/* Base button style */
+.card-btn {
+  -fx-background-color: #4a90e2;
+  -fx-text-fill: white;
+  -fx-font-size: 13px;
+  -fx-font-weight: bold;
+  -fx-background-radius: 999;
+  -fx-padding: 8 18 8 18;
+  -fx-cursor: hand;
+}
+
+/* Hover state */
+.card-btn:hover {
+  -fx-background-color: #2c6cbf;
+}
+
+/* Focus (keyboard nav) */
+.card-btn:focused {
+  -fx-effect: dropshadow(gaussian, rgba(74, 144, 226, 0.6), 12, 0.2, 0, 0);
+}
+
+.card-btn-danger {
+  -fx-background-color: transparent;
+  -fx-text-fill: #dc3545;
+  -fx-font-size: 12px;
+  -fx-font-weight: bold;
+  -fx-background-radius: 999;
+  -fx-border-radius: 999;
+  -fx-border-color: rgba(220, 53, 69, 0.4);
+  -fx-border-width: 1;
+  -fx-padding: 8 18 8 18;
+  -fx-cursor: hand;
+}
+
+/* Danger hover */
+.card-btn-danger:hover {
+  -fx-background-color: rgba(220, 53, 69, 0.08);
+  -fx-border-color: #dc3545;
+}
+
+.back-btn {
+  -fx-background-color: transparent;
+  -fx-text-fill: #4a90e2;
+  -fx-font-size: 13px;
+  -fx-font-weight: bold;
+  -fx-padding: 8 18 8 18;
+  -fx-cursor: hand;
+  -fx-background-radius: 999;
+  -fx-border-radius: 999;
+  -fx-border-color: #4a90e2;
+}
+
+/* Hover state */
+.back-btn:hover {
+  -fx-background-color: rgba(220, 53, 69, 0.08);
+  -fx-border-color: #2c6cbf;
+}

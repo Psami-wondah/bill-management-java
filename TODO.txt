@@ -12,7 +12,7 @@
 
 # Search and select a customer
 1. Assign a Meter
-2. Assign a Tarrif
+2. Assign a Tariff
 3. Add an Account
 4. View Account Summmary
 5. Enter meter readings

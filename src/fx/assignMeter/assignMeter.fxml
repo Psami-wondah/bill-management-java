@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/25"
+      xmlns:fx="http://javafx.com/fxml/1"
+      stylesheets="@/fx/global.css"
+      fx:controller="fx.assignMeter.AssignMeterController"
+      prefWidth="600.0"
+      spacing="18"
+      style="-fx-background-color: white;
+             -fx-background-radius: 16;
+             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.16), 18, 0.2, 0, 4);">
+
+    <padding>
+        <Insets top="24" right="24" bottom="24" left="24"/>
+    </padding>
+
+    <children>
+
+        <!-- Header -->
+        <HBox spacing="8" alignment="CENTER_LEFT">
+            <children>
+                <!-- Accent bar -->
+                <Region prefWidth="4" maxWidth="4" prefHeight="26"
+                        style="-fx-background-color: #4A90E2; -fx-background-radius: 999;"/>
+                <VBox spacing="4">
+                    <children>
+                        <Label fx:id="label"
+                               text="Assign Meter"
+                               style="-fx-font-size: 20px;
+                                      -fx-font-weight: bold;
+                                      -fx-text-fill: #1C1C1E;"/>
+                        <Label text="Assign meter configuration for this customer."
+                               style="-fx-font-size: 11px;
+                                      -fx-text-fill: #6E6E73;"/>
+                    </children>
+                </VBox>
+                         <Region HBox.hgrow="ALWAYS"/>
+
+                <Button text="Back"
+                        fx:id="backButton"
+                        onAction="#onBack"
+                        styleClass="back-btn"
+                        />
+            </children>
+        </HBox>
+
+        <Separator/>
+
+        <VBox spacing="16">
+            <children>
+
+
+                <!-- Meter details card -->
+                <VBox spacing="10"
+                      style="-fx-background-color: #F6F7FB;
+                             -fx-background-radius: 10;
+                             -fx-padding: 14;">
+                    <children>
+                        <Label text="Meter details"
+                               style="-fx-font-size: 13px;
+                                      -fx-font-weight: bold;
+                                      -fx-text-fill: #1C1C1E;"/>
+
+                        <Label text="Assign meter configuration for this customer."
+                               style="-fx-text-fill: #6E6E73;
+                                      -fx-font-size: 11px;"/>
+
+                        <GridPane hgap="12" vgap="10">
+                            <columnConstraints>
+                                <ColumnConstraints prefWidth="120"/>
+                                <ColumnConstraints hgrow="ALWAYS"/>
+                            </columnConstraints>
+
+                            <children>
+
+                                <Label text="Account:"
+                                       GridPane.rowIndex="0" GridPane.columnIndex="0"
+                                       style="-fx-text-fill: #1C1C1E; -fx-font-size: 12px;"/>
+                                <ComboBox fx:id="accountComboBox"
+                                          promptText="Select account"
+                                          GridPane.rowIndex="0" GridPane.columnIndex="1"
+                                          maxWidth="Infinity" HBox.hgrow="ALWAYS"
+                                          minWidth="350"
+                                          style="-fx-background-radius: 6;
+                                                 -fx-border-radius: 6;
+                                                 -fx-border-color: #E1E3E6;
+                                                 -fx-padding: 2 8 2 8;"/>
+                                    <Label text="Fuel Type:"
+                                       GridPane.rowIndex="1" GridPane.columnIndex="0"
+                                       style="-fx-text-fill: #1C1C1E; -fx-font-size: 12px;"/>
+                                <ComboBox fx:id="fuelTypeComboBox"
+                                          promptText="Select fuel type"
+                                          GridPane.rowIndex="1" GridPane.columnIndex="1"
+                                          maxWidth="Infinity" HBox.hgrow="ALWAYS"
+                                          style="-fx-background-radius: 6;
+                                                 -fx-border-radius: 6;
+                                                 -fx-border-color: #E1E3E6;
+                                                 -fx-padding: 2 8 2 8;"/>
+
+                                <Label text="Register Type:"
+                                       GridPane.rowIndex="2" GridPane.columnIndex="0"
+                                       style="-fx-text-fill: #1C1C1E; -fx-font-size: 12px;"/>
+                                <ComboBox fx:id="registerTypeComboBox"
+                                          promptText="Select register type"
+                                          GridPane.rowIndex="2" GridPane.columnIndex="1"
+                                          maxWidth="Infinity" HBox.hgrow="ALWAYS"
+                                          style="-fx-background-radius: 6;
+                                                 -fx-border-radius: 6;
+                                                 -fx-border-color: #E1E3E6;
+                                                 -fx-padding: 2 8 2 8;"/>
+
+                                <Label text="Installation Date:"
+                                       GridPane.rowIndex="3" GridPane.columnIndex="0"
+                                       style="-fx-text-fill: #1C1C1E; -fx-font-size: 12px;"/>
+                                <DatePicker fx:id="installationDateField"
+                                            GridPane.rowIndex="3" GridPane.columnIndex="1"
+                                            maxWidth="Infinity" HBox.hgrow="ALWAYS"
+                                            style="-fx-background-radius: 6;
+                                                   -fx-border-radius: 6;
+                                                   -fx-border-color: #E1E3E6;
+                                                   -fx-padding: 2 8 2 8;"/>
+
+                                
+                     
+                                  </children>
+                                  
+                        </GridPane>
+                    </children>
+                </VBox>
+                                       <VBox spacing="10"
+                      style="-fx-background-color: #F6F7FB;
+                             -fx-background-radius: 10;
+                             -fx-padding: 14;">
+                    <children>
+                        <Label text="Tariff details"
+                               style="-fx-font-size: 13px;
+                                      -fx-font-weight: bold;
+                                      -fx-text-fill: #1C1C1E;"/>
+
+                        <Label text="Enter tariff configuration for this customer."
+                               style="-fx-text-fill: #6E6E73;
+                                      -fx-font-size: 11px;"/>
+
+                        <GridPane hgap="12" vgap="10">
+                            <columnConstraints>
+                                <ColumnConstraints prefWidth="120"/>
+                                <ColumnConstraints hgrow="ALWAYS"/>
+                            </columnConstraints>
+
+                            <children>
+                                <Label text="Tariff:"
+                                       GridPane.rowIndex="0" GridPane.columnIndex="0"
+                                       style="-fx-text-fill: #1C1C1E; -fx-font-size: 12px;"/>
+                                <ComboBox fx:id="tariffComboBox"
+                                          promptText="Select tariff"
+                                          GridPane.rowIndex="0" GridPane.columnIndex="1"
+                                          maxWidth="Infinity" HBox.hgrow="ALWAYS"
+                                          style="-fx-background-radius: 6;
+                                                 -fx-border-radius: 6;
+                                                 -fx-border-color: #E1E3E6;
+                                                 -fx-padding: 2 8 2 8;"/>
+
+
+                            </children>
+                        </GridPane>
+                    </children>
+                </VBox>
+
+                <!-- Actions -->
+                <HBox alignment="CENTER_RIGHT" spacing="8">
+                    <children>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="Cancel"
+                                fx:id="cancelButton"
+                                onAction="#onCancel"
+                                styleClass="card-btn-danger"/>
+                        <Button text="Submit"
+                                fx:id="submitButton"
+                                onAction="#onSubmit"
+                                styleClass="card-btn"/>
+                    </children>
+                </HBox>
+
+            </children>
+        </VBox>
+
+    </children>
+</VBox>
